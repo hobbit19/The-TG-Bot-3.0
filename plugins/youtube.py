@@ -166,7 +166,7 @@ async def download_video(v_url):
 
         await v_url.delete()
         
-SYNTAX.update({
+syntax.update({
     "yta": "\
 ```.yta <url> [or as a reply to a message to download]```\
 \nUsage: Download any youtube video in audio format\
