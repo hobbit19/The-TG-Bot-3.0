@@ -1,5 +1,4 @@
-aiofiles
-aiohttp
+heroku3
 aria2p
 beautifulsoup4
 cfscrape
@@ -23,9 +22,9 @@ selenium
 speedtest-cli
 sqlalchemy
 telegraph
-urbandict
-wikipedia
-youtube-dl
+asyncurban
+wikipedia>=1.4.0
+youtube_dl
 git+https://github.com/ahupp/python-magic
 google-api-python-client
 oauth2client

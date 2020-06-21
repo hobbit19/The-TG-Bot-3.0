@@ -2,6 +2,7 @@
 # By Priyam Kalra
 # Syntax .oof, .sed, .emoji
 
+from userbot import syntax
 import asyncio
 
 emojis = {
@@ -19,18 +20,20 @@ emojis = {
 }
 
 unpacked_emojis = ""
+num = 0
 for emoji in emojis:
-    unpacked_emojis += f"`{emoji}`\n"
+    num += 1
+    unpacked_emojis += f"`#{num}: {emoji}`\n"
 
 ascii = {
     "mf": "......................................../´¯/) \n......................................,/¯../ \n...................................../..../ \n..................................../´.¯/ \n..................................../´¯/ \n..................................,/¯../ \n................................../..../ \n................................./´¯./ \n................................/´¯./ \n..............................,/¯../ \n............................./..../ \n............................/´¯/ \n........................../´¯./ \n........................, /¯.. / \n......................./.... / \n...................... /´¯/ \n...................., /¯.. / \n.................../.... / \n............. /´¯/\'...' /´¯¯·¸ \n.......... / '/.../..../....... /¨¯\ \n........('(...´...´.... ¯~/'...') \n.........\.................'..... / \n..........''...\.......... _.·´\n............\..............( \n..............\.............\..."
 }
 
 unpacked_ascii = ""
+num = 0
 for art in ascii:
-    unpacked_ascii += f"{art}\n"
-
-from userbot import syntax
+    num += 1
+    unpacked_ascii += f"#{num}: `{art}`\n"
 
 
 @bot.on(command(pattern="oof ?(.*)"))
@@ -101,13 +104,13 @@ async def _(event):
 
 
 syntax.update({
-    "reactions": "\
+    "reactions": f"\
 Just some funny little animations ;)\
 \nList of reactions:\
 \n.oof\
 \n.sed\
 \n.hek\
-\n.emoji <emoji_name>\
+\n\n.emoji <emoji_name>\
 \nUsage: Prints the target emoji.\
 \nList of included emoji(s):\
 \n{unpacked_emojis}\

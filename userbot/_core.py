@@ -194,6 +194,16 @@ async def _(event):
     await event.edit(help_string + "\n\n")
 
 
+@bot.on(command("restart"))
+async def _(event):
+    if event.fwd_from:
+        return
+    await event.edit("The-TG-Bot is rebooting, wait for a few seconds and try .alive")
+    await bot.disconnect()
+    os.execl(sys.executable, sys.executable, *sys.argv)
+    quit()
+
+
 def get_size(bytes, suffix="B"):
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
@@ -204,10 +214,12 @@ def get_size(bytes, suffix="B"):
 
 syntax.update({
     "core": "\
-```.load <as_a_reply_to_a_module_file>```\
-\nUsage: Load a specified module.\
-\n\n```.alive```\
+```.alive```\
 \nUsage: Returns userbot's system stats and some general information.\
+\n\n```.restart```\
+\nUsage: Restart your userbot.\
+\n\n```.load <as_a_reply_to_a_module_file>```\
+\nUsage: Load a specified module.\
 \n\n```.reload <module_name>```\
 \nUsage: Reload any module that was unloaded.\
 \n\n```.unload <module_name>```\
