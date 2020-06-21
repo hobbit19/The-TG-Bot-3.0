@@ -14,6 +14,7 @@ from youtube_dl.utils import (DownloadError, ContentTooShortError,
                               UnavailableVideoError, XAttrMetadataError)
 from asyncio import sleep
 from telethon.tl.types import DocumentAttributeAudio
+from userbot import syntax
 
 @bot.on(command(pattern="yt(a|v) ?(.*)"))
 async def download_video(v_url):
