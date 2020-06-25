@@ -25,6 +25,7 @@ from telethon.tl.types import (
     MessageMediaPhoto
 )
 from userbot import syntax
+from sqlhelpers.kang_sql import get_id, update_id
 
 
 @bot.on(command(pattern="kang ?(.*)"))
@@ -37,17 +38,9 @@ async def _(event):
     reply_message = await event.get_reply_message()
     sticker_emoji = "🔥"
     input_str = event.pattern_match.group(1)
-    pack_id = 1
+    pack_id = get_id()
     if input_str:
-        input_str = input_str.split()
-        try:
-            pack_id = int(input_str[0])
-        except:
-            pass
-        try:
-            sticker_emoji = input_str[1]
-        except:
-            pass
+        sticker_emoji = input_str
 
     botuser = await bot.get_me()
     botuser = f"@{botuser.username}"
@@ -75,55 +68,62 @@ async def _(event):
 
     await event.edit("```Using black magic to kang this sticker...```")
 
-    async with bot.conversation("@Stickers") as bot_conv:
-        now = datetime.datetime.now()
-        dt = now + datetime.timedelta(minutes=1)
-        if not await stickerset_exists(bot_conv, packshortname):
-            await silently_send_message(bot_conv, "/cancel")
-            if is_a_s:
-                response = await silently_send_message(bot_conv, "/newanimated")
+    for attempts in range(2):
+        attempts += 1
+        async with bot.conversation("@Stickers") as bot_conv:
+            now = datetime.datetime.now()
+            dt = now + datetime.timedelta(minutes=1)
+            if not await stickerset_exists(bot_conv, packshortname):
+                await silently_send_message(bot_conv, "/cancel")
+                if is_a_s:
+                    response = await silently_send_message(bot_conv, "/newanimated")
+                else:
+                    response = await silently_send_message(bot_conv, "/newpack")
+                if "Yay!" not in response.text:
+                    await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
+                    return
+                response = await silently_send_message(bot_conv, packname)
+                if not response.text.startswith("Alright!"):
+                    if attempts = 2:
+                        await event.edit("Unexpected error! Contact the developer for help.")
+                    pack_id = update_id()
+                    packname = f"{botuser}'s kang pack vol.{pack_id}"
+                    packshortname = f"thetgbot_kang_pack_vol{pack_id}_{userid}"
+                    await event.edit(f"`{botuser}'s kang pack vol.{pack_id-1} is full!\nSwitching to {packname}..`")
+                    continue
+                w = await bot_conv.send_file(
+                    file=uploaded_sticker,
+                    allow_cache=False,
+                    force_document=True
+                )
+                response = await bot_conv.get_response()
+                if "Sorry" in response.text:
+                    await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
+                    return
+                await silently_send_message(bot_conv, sticker_emoji)
+                await silently_send_message(bot_conv, "/publish")
+                response = await silently_send_message(bot_conv, f"<{packname}>")
+                await silently_send_message(bot_conv, "/skip")
+                response = await silently_send_message(bot_conv, packshortname)
+                if response.text == "Sorry, this short name is already taken.":
+                    await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
+                    return
             else:
-                response = await silently_send_message(bot_conv, "/newpack")
-            if "Yay!" not in response.text:
-                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                return
-            response = await silently_send_message(bot_conv, packname)
-            if not response.text.startswith("Alright!"):
-                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                return
-            w = await bot_conv.send_file(
-                file=uploaded_sticker,
-                allow_cache=False,
-                force_document=True
-            )
-            response = await bot_conv.get_response()
-            if "Sorry" in response.text:
-                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                return
-            await silently_send_message(bot_conv, sticker_emoji)
-            await silently_send_message(bot_conv, "/publish")
-            response = await silently_send_message(bot_conv, f"<{packname}>")
-            await silently_send_message(bot_conv, "/skip")
-            response = await silently_send_message(bot_conv, packshortname)
-            if response.text == "Sorry, this short name is already taken.":
-                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                return
-        else:
-            await silently_send_message(bot_conv, "/cancel")
-            await silently_send_message(bot_conv, "/addsticker")
-            await silently_send_message(bot_conv, packshortname)
-            await bot_conv.send_file(
-                file=uploaded_sticker,
-                allow_cache=False,
-                force_document=True
-            )
-            response = await bot_conv.get_response()
-            if "Sorry" in response.text:
-                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                return
-            await silently_send_message(bot_conv, response)
-            await silently_send_message(bot_conv, sticker_emoji)
-            await silently_send_message(bot_conv, "/done")
+                await silently_send_message(bot_conv, "/cancel")
+                await silently_send_message(bot_conv, "/addsticker")
+                await silently_send_message(bot_conv, packshortname)
+                await bot_conv.send_file(
+                    file=uploaded_sticker,
+                    allow_cache=False,
+                    force_document=True
+                )
+                response = await bot_conv.get_response()
+                if "Sorry" in response.text:
+                    await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
+                    return
+                await silently_send_message(bot_conv, response)
+                await silently_send_message(bot_conv, sticker_emoji)
+                await silently_send_message(bot_conv, "/done")
 
     await event.edit(f"Sticker successfully kanged to [{packname}](t.me/addstickers/{packshortname})!")
 
