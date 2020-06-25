@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer
 
 class Pack(BASE):
     __tablename__ = "pack"
-    pack_id = Column(Integer, primary_key=True, default=1)
+    pack_id = Column("pack_id", Integer, primary_key=True, default=1)
 
     def __init__(self, pack_id):
         self.pack_id = int(pack_id)
