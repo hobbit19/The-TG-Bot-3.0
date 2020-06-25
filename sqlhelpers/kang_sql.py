@@ -14,7 +14,7 @@ Pack.__table__.create(checkfirst=True)
 
 
 def get_id():
-    return SESSION.query(Pack).get(int(pack_id))
+    return SESSION.query(Pack).all()[0]
     SESSION.close()
 
 
