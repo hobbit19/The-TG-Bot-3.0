@@ -84,7 +84,7 @@ async def _(event):
                     return
                 response = await silently_send_message(bot_conv, packname)
                 if not response.text.startswith("Alright!"):
-                    if attempts = 2:
+                    if attempts == 2:
                         await event.edit("Unexpected error! Contact the developer for help.")
                     pack_id = update_id()
                     packname = f"{botuser}'s kang pack vol.{pack_id}"
